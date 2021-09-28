@@ -53,7 +53,7 @@
                 Plugin.Logger.Log("Please do not use Legacy Chroma Lights for new maps as it is deprecated and its functionality in future versions of Chroma cannot be guaranteed", IPA.Logging.Logger.Level.Warning);
             }
 
-            ChromaController.ToggleChromaPatches((chromaRequirement || legacyOverride) && !ChromaConfig.Instance.ChromaEventsDisabled);
+            ChromaController.ToggleChromaPatches((chromaRequirement || legacyOverride) && !ChromaConfig.Instance.ChromaEventsDisabled, legacyOverride);
             ChromaController.DoColorizerSabers = chromaRequirement && !ChromaConfig.Instance.ChromaEventsDisabled;
 
             LightIDTableManager.SetEnvironment(difficultyBeatmap.GetEnvironmentInfo().serializedName);

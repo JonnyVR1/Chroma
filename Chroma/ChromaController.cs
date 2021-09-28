@@ -18,6 +18,7 @@
         private static readonly FieldAccessor<BeatmapObjectCallbackController, IReadonlyBeatmapData>.Accessor _beatmapDataAccessor = FieldAccessor<BeatmapObjectCallbackController, IReadonlyBeatmapData>.GetAccessor("_beatmapData");
 
         public static bool ChromaIsActive { get; private set; }
+        public static bool IsLegacyChroma { get; private set; }
 
         public static bool DoColorizerSabers { get; set; }
 
@@ -25,10 +26,11 @@
 
         internal static IAudioTimeSource? IAudioTimeSource { get; private set; }
 
-        public static void ToggleChromaPatches(bool value)
+        public static void ToggleChromaPatches(bool value, bool legacy = false)
         {
             Heck.HeckData.TogglePatches(_harmonyInstance, value);
             ChromaIsActive = value;
+            IsLegacyChroma = legacy;
         }
 
         internal static IEnumerator DelayedStart(BeatmapObjectSpawnController beatmapObjectSpawnController)
@@ -53,15 +55,18 @@
                     EnvironmentEnhancementManager.Init(customBeatmap, beatmapObjectSpawnController.noteLinesDistance);
                 }
 
-                try
+                if (IsLegacyChroma)
                 {
-                    // please let me kill legacy
-                    LegacyLightHelper.Activate(beatmapData.beatmapEventsData);
-                }
-                catch (System.Exception e)
-                {
-                    Plugin.Logger.Log("Could not run Legacy Chroma Lights");
-                    Plugin.Logger.Log(e);
+                    try
+                    {
+                        // please let me kill legacy
+                        LegacyLightHelper.Activate(beatmapData.beatmapEventsData);
+                    }
+                    catch (System.Exception e)
+                    {
+                        Plugin.Logger.Log("Could not run Legacy Chroma Lights");
+                        Plugin.Logger.Log(e);
+                    }
                 }
             }
         }
