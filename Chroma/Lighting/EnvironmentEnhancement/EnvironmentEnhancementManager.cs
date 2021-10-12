@@ -131,13 +131,12 @@
                                 ComponentInitializer.PostfillComponentsData(newGameObject.transform, gameObject.transform, componentDatas);
                                 SceneManager.MoveGameObjectToScene(newGameObject, scene);
                                 newGameObject.transform.SetParent(parent, true);
-                                ComponentInitializer.InitializeComponents(newGameObject.transform, gameObject.transform, _gameObjectInfos, componentDatas, lightID);
+                                gameObjectInfos.Add(ComponentInitializer.InitializeComponents(newGameObject.transform, gameObject.transform, _gameObjectInfos, componentDatas, lightID));
 
-                                List<GameObjectInfo> gameObjects = _gameObjectInfos.Where(n => n.GameObject == newGameObject).ToList();
-                                gameObjectInfos.AddRange(gameObjects);
 
                                 if (Settings.ChromaConfig.Instance.PrintEnvironmentEnhancementDebug)
                                 {
+                                    List<GameObjectInfo> gameObjects = _gameObjectInfos.Where(n => n.GameObject == newGameObject).ToList();
                                     gameObjects.ForEach(n => Plugin.Logger.Log(n.FullID));
                                 }
                             }
@@ -152,6 +151,8 @@
 
                         gameObjectInfos = foundObjects;
                     }
+                    Plugin.Logger.Log($"Took {stopwatch.ElapsedMilliseconds}ms for duping ");
+
 
                     foreach (GameObjectInfo gameObjectInfo in gameObjectInfos)
                     {
