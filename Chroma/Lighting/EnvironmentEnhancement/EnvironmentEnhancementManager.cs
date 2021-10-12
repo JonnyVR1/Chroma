@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Text.RegularExpressions;
     using CustomJSONData;
@@ -74,6 +75,8 @@
                     Plugin.Logger.Log($"=====================================");
                 }
 
+                Stopwatch allObjects = Stopwatch.StartNew();
+
                 foreach (Dictionary<string, object?> gameObjectData in environmentData)
                 {
                     string id = gameObjectData.Get<string>(ID) ?? throw new InvalidOperationException("Id was not defined.");
@@ -93,6 +96,7 @@
 
                     int? lightID = gameObjectData.Get<int?>(LIGHTID);
 
+                    Stopwatch stopwatch = Stopwatch.StartNew();
                     List<GameObjectInfo> foundObjects = LookupID(id, lookupMethod);
                     if (foundObjects.Count > 0)
                     {
@@ -106,6 +110,8 @@
                     {
                         Plugin.Logger.Log($"ID [\"{id}\"] using method [{lookupMethod:G}] found nothing.", IPA.Logging.Logger.Level.Error);
                     }
+
+                    Plugin.Logger.Log($"Took {stopwatch.ElapsedMilliseconds}ms for regex");
 
                     List<GameObjectInfo> gameObjectInfos;
 
@@ -245,6 +251,8 @@
                         Plugin.Logger.Log($"=====================================");
                     }
                 }
+
+                Plugin.Logger.Log($"Took {allObjects.ElapsedMilliseconds}ms for all objects");
             }
 
             try
@@ -261,10 +269,11 @@
         private static List<GameObjectInfo> LookupID(string id, LookupMethod lookupMethod)
         {
             Func<GameObjectInfo, bool> predicate;
+            Regex regex;
             switch (lookupMethod)
             {
                 case LookupMethod.Regex:
-                    Regex regex = new Regex(id, RegexOptions.CultureInvariant);
+                    regex = new Regex(id, RegexOptions.CultureInvariant | RegexOptions.Compiled);
                     predicate = n => regex.IsMatch(n.FullID);
                     break;
 
