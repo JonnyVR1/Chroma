@@ -77,7 +77,7 @@
             }
         }
 
-        internal static void InitializeComponents(Transform root, Transform original, List<GameObjectInfo> gameObjectInfos, List<IComponentData> componentDatas, int? lightID)
+        internal static GameObjectInfo InitializeComponents(Transform root, Transform original, List<GameObjectInfo> gameObjectInfos, List<IComponentData> componentDatas, int? lightID)
         {
             void GetComponentAndOriginal<T>(Action<T, T> initializeDelegate)
             {
@@ -223,6 +223,8 @@
                 int index = transform.GetSiblingIndex();
                 InitializeComponents(transform, original.GetChild(index), gameObjectInfos, componentDatas, lightID);
             }
+
+            return newGameObjectInfo;
         }
     }
 }
