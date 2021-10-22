@@ -45,6 +45,11 @@
                     {
                         case CustomNoteData customNoteData:
                             customData = customNoteData.customData;
+                            if (customData is null || customData.Count < 0)
+                            {
+                                continue;
+                            }
+
                             chromaObjectData = new ChromaNoteData()
                             {
                                 Color = ChromaUtils.GetColorFromData(customData),
@@ -54,6 +59,11 @@
 
                         case CustomObstacleData customObstacleData:
                             customData = customObstacleData.customData;
+                            if (customData is null || customData.Count < 0)
+                            {
+                                continue;
+                            }
+
                             chromaObjectData = new ChromaObjectData()
                             {
                                 Color = ChromaUtils.GetColorFromData(customData),
@@ -62,6 +72,10 @@
 
                         case CustomWaypointData customWaypointData:
                             customData = customWaypointData.customData;
+                            if (customData is null || customData.Count < 0)
+                            {
+                                continue;
+                            }
                             chromaObjectData = new ChromaObjectData();
                             break;
 

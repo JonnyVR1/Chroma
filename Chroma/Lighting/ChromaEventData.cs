@@ -31,7 +31,8 @@
             {
                 try
                 {
-                    if (beatmapEventData is CustomBeatmapEventData customBeatmapEventData)
+                    // Checks if custom data is not null and has elements
+                    if (beatmapEventData is CustomBeatmapEventData { customData: { Count: > 0 } } customBeatmapEventData)
                     {
                         Dictionary<string, object?> customData = customBeatmapEventData.customData;
                         ChromaEventData chromaEventData = new ChromaEventData(
